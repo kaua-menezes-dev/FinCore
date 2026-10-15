@@ -1,58 +1,210 @@
-# Product
+# FinCore — Product Definition
 
-<!-- impeccable:product-schema 1 -->
+## 1. Product Overview
 
-## Platform
+FinCore is a personal financial management web application designed to help users record, visualize, analyze, and make better decisions about their finances.
 
-web
+The application is being developed as a full-stack portfolio project, demonstrating backend engineering, REST API development, authentication, frontend integration, and product-oriented UI/UX design.
 
-## Stack
+Development is incremental and divided into three versions: V1 (MVP), V2, and V3.
 
-React + Vite + TypeScript single-page app. It consumes the author's own FinCore backend API, a separate project that is not part of this folder. Nothing has been scaffolded yet.
+Only approved V1 capabilities should be implemented in the initial release.
 
-## Users
+## 2. Platform & Technology Stack
 
-There are two audiences, and they matter in different ways:
+FinCore is a web application developed in a single Git repository (monorepo).
 
-- **The audience that decides (primary):** recruiters, hiring managers, and prospective clients reviewing the author's portfolio. They come to judge the author's engineering ability and usually spend only a few minutes exploring.
-- **The audience the app depicts:** an individual managing their personal finances in Brazil. They track money across their accounts, review their transactions, and want to understand where their money goes. These users are fictional. FinCore is a showcase, not a product with real customers.
+### Backend
 
-## Product Purpose
+- Java 21
+- Spring Boot
+- Spring Web / REST API
+- Spring Data JPA
+- Spring Security
+- PostgreSQL
+- Flyway
+- Bean Validation
+- Maven
 
-FinCore is a personal finance web app. People use it to see their accounts and transactions in one place and to understand their spending and cash flow through reports. As a portfolio piece, it succeeds when a reviewer leaves convinced the author can build a real, production-shaped application, not just a pretty dashboard mockup.
+### Frontend
 
-## Positioning
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
 
-FinCore stands out through engineering depth. Most finance-dashboard demos are static screens with hardcoded numbers. FinCore is a real client for a real API, with authentication, a proper API integration layer, deliberate state management, tests, and complete loading, empty, and error states. Its credibility rests on everything behaving like a shipped product.
+### Design
 
-## Operating Context
+- Figma
+- Figma MCP
+- Impeccable
 
-- Reviewers usually arrive from a portfolio link or a résumé, often on desktop and sometimes on a phone. They explore quickly, with no onboarding and no real account.
-- The app runs against the author's FinCore API, so latency, failures, and empty datasets are real conditions the interface must handle.
+### Repository Structure
 
-## Capabilities and Constraints
+- `backend/fincore-api/` — REST API, business logic, authentication, and persistence.
+- `frontend/` — Web application.
+- `docs/` — Product requirements, architecture, API contracts, and design documentation.
 
-**v1 scope:**
-- **Accounts & transactions:** multiple accounts with balances; a transaction list with categories, search, and filters.
-- **Reports & insights:** spending by category, cash flow over time, and month-over-month comparison.
+## 3. Target Audience
 
-**Out of scope for v1:** budgets and savings goals.
+FinCore has two relevant audiences.
 
-**Constraints:**
-- The interface is in Portuguese (pt-BR) only, using BRL currency (`R$ 1.234,56`) and Brazilian date and number formats. There is no i18n layer for v1.
-- All data comes from the FinCore API. The web app must not invent data it doesn't receive.
+**Application users:** Individuals in Brazil who want to organize personal financial information, monitor balances, review transactions, and understand spending patterns.
 
-**Open decisions:**
-- Authentication method, and whether reviewers get a demo login or a pre-seeded account.
-- Deploy target.
+**Portfolio reviewers:** Recruiters, hiring managers, and prospective clients evaluating the developer's technical capabilities.
 
-## Evidence on Hand
+During portfolio evaluation, fictional demonstration data may be used. The project must not claim to have real customers or fabricated usage metrics.
 
-None yet. There are no screenshots, metrics, testimonials, or users. Any data shown must be seeded through the API and clearly fictional. Do not fabricate user counts, testimonials, or real-world usage claims.
+## 4. Product Objectives
 
-## Product Principles
+FinCore aims to:
 
-1. **Behave like shipped software.** Every view handles loading, empty, error, and stale states. A missing state is a defect, not a polish item.
-2. **The API is the source of truth.** The UI reflects what the backend returns and never papers over gaps with hardcoded values.
-3. **Numbers must be exact and readable.** Money is formatted consistently in BRL, aligned for comparison, and never ambiguous about sign or period.
-4. **Respect the reviewer's few minutes.** Key capabilities should be reachable and legible quickly, without setup friction.
+- Centralize financial information.
+- Allow users to register and review financial movements.
+- Present financial information through intuitive dashboards.
+- Help users understand spending behavior and cash flow.
+- Demonstrate a functional integration between a React frontend and a Spring Boot REST API.
+
+## 5. Product Positioning
+
+FinCore should demonstrate both engineering depth and product quality.
+
+It should not be merely a static finance-dashboard demonstration.
+
+The final application must demonstrate:
+
+- Real REST API integration.
+- Authentication and authorization.
+- Business rules implemented in the backend.
+- Persistent data.
+- Consistent UI/UX.
+- Loading, empty, and error states.
+- Automated tests where applicable.
+
+## 6. Version 1 — MVP Scope
+
+### Accounts & Transactions
+
+- Support multiple financial accounts.
+- Display account balances.
+- Register and visualize financial transactions.
+- Organize transactions into categories.
+- Search and filter financial movements.
+
+### Reports & Insights
+
+- Spending distribution by category.
+- Cash flow visualization over time.
+- Month-over-month financial comparison.
+
+Detailed business rules, API contracts, and screen behavior must be approved before implementation.
+
+### Out of Scope for V1
+
+- Category-based budgets and monthly limits.
+- Savings goals with targets and deadlines.
+
+These capabilities may be evaluated for V2 or V3.
+
+## 7. Development Strategy
+
+Backend and frontend will be developed in parallel.
+
+### Backend Development
+
+The developer is responsible for the Spring Boot REST API, including:
+
+- Domain modeling.
+- Business rules.
+- Persistence.
+- Authentication and authorization.
+- Endpoints and DTOs.
+- Validation and testing.
+
+Claude Code may assist with explicitly delegated tasks.
+
+### Frontend Development
+
+Claude Code will assist with:
+
+- UI/UX design.
+- Design system.
+- Figma prototypes.
+- React components.
+- Responsive layouts.
+- Frontend testing.
+- Git commits under the approved workflow.
+
+### Temporary Mock Data
+
+During frontend development, temporary mock data may be used to implement and validate the interface before the corresponding API endpoints are available.
+
+Mock data must:
+
+- Be clearly identifiable as fictional.
+- Remain isolated from presentation components.
+- Be replaceable by API integration.
+- Never be presented as real production information.
+
+### Final MVP Integration
+
+The final integrated MVP must consume the FinCore REST API.
+
+The backend is the source of truth for financial data, calculations, persistence, and business rules.
+
+Mock data must not silently replace missing API responses in the final integrated application.
+
+## 8. UX & Design Principles
+
+- Prioritize clarity, consistency, and usability.
+- Maintain a unified visual identity across the landing page and dashboard.
+- Use accessible, reusable components.
+- Provide responsive layouts.
+- Handle loading, empty, error, and relevant stale-data states.
+- Display financial values accurately.
+- Avoid unnecessary visual complexity.
+
+Visual references must be analyzed and approved before establishing the design system.
+
+## 9. Localization
+
+The MVP interface will use:
+
+- Portuguese (pt-BR).
+- Brazilian Real (BRL).
+- Brazilian date and numeric formats.
+
+Internationalization is outside the initial scope.
+
+## 10. Open Decisions
+
+The following decisions remain open:
+
+- Detailed authentication and authorization flows.
+- Demo account or seeded demonstration environment for portfolio reviewers.
+- Final deployment architecture and hosting providers.
+- Detailed API contracts.
+- Approved visual identity and screen flows.
+
+Do not treat open decisions as approved requirements.
+
+## 11. Product Documentation
+
+Approved decisions should be documented progressively:
+
+- `PRODUCT.md` — Product vision and approved scope.
+- `DESIGN.md` — Approved visual identity and design system.
+- `SCREENS.md` — Approved screen flows and interface states.
+- `API-CONTRACTS.md` — Approved REST API contracts.
+- `ARCHITECTURE.md` — Architectural decisions when defined.
+
+Create supporting documentation only when needed.
+
+## 12. Product Principles
+
+1. Build a functional product, not only a visual demonstration.
+2. Keep the backend as the source of truth.
+3. Use mocks only as a temporary development strategy or an explicitly identified demo mechanism.
+4. Prioritize correctness, maintainability, and clear financial information.
+5. Implement the MVP before expanding into V2 and V3.
+6. Never introduce unapproved business requirements.
