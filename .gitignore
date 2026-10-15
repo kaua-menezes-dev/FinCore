@@ -1,0 +1,76 @@
+
+# ==========================================
+# FinCore - Git Ignore
+# Backend: Java + Spring Boot + Maven
+# Frontend: React + TypeScript + Vite
+# ==========================================
+
+# Java / Maven
+**/target/
+*.class
+*.jar
+*.war
+*.ear
+!**/.mvn/wrapper/maven-wrapper.jar
+
+# Maven Wrapper
+!.mvn/wrapper/maven-wrapper.properties
+
+# Node.js / Frontend
+**/node_modules/
+**/dist/
+**/dist-ssr/
+**/build/
+**/.vite/
+**/coverage/
+*.tsbuildinfo
+.pnp
+.pnp.js
+.yarn/
+
+# Tests
+**/test-results/
+**/playwright-report/
+**/.nyc_output/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+**/.env
+**/.env.*
+!**/.env.example
+*.local
+
+# IntelliJ / IDEs
+.idea/
+*.iml
+out/
+.vscode/*
+!.vscode/extensions.json
+*.suo
+*.sw?
+
+# Claude Code - local settings
+**/.claude/settings.local.json
+**/CLAUDE.local.md
+
+# Impeccable - local settings
+**/.impeccable/config.local.json
+
+# Operating systems
+.DS_Store
+Thumbs.db
+
+# Local development tool state
+**/.claude/projects/
+**/.claude/todos/
+**/.claude/plans/
+
+# Impeccable - platform engine binary (the launcher downloads it and verifies its SHA-256)
+.claude/skills/impeccable/scripts/bin/
