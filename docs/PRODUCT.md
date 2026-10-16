@@ -97,6 +97,74 @@ The final application must demonstrate:
 - Cash flow visualization over time.
 - Month-over-month financial comparison.
 
+### Cards Management — MVP V1
+
+Cards in FinCore are manually registered financial instruments used to organize transactions.
+
+FinCore does not issue cards and does not connect directly to financial institutions.
+
+#### Card Registration
+
+| Field | Required | Description |
+|---|---|---|
+| Nickname | Yes | User-defined name to identify the card |
+| Card Type | Yes | `CREDIT` or `DEBIT` |
+| Financial Institution | No | Optional institution identification |
+| Last Four Digits | No | Optional card identification |
+| Visual Theme / Color | No | Optional card appearance |
+
+#### Business Rules
+
+1. Each card belongs to a specific authenticated user.
+2. Users may view and manage only their own cards.
+3. A card must have a nickname and type.
+4. Card types are `CREDIT` and `DEBIT`.
+5. Financial institution information is optional.
+6. The last four digits are optional. If provided, they must contain exactly four numeric digits.
+7. The visual theme is optional. The system may suggest a visual style based on the selected institution.
+8. Users may edit their registered card information.
+9. Users may remove their registered cards.
+10. Removing a card must never delete its associated financial transactions.
+11. When a card is removed, its associated transactions must remain in the user's financial history and become unlinked from that card.
+12. Card removal is permanent in MVP V1, but does not affect transaction records.
+13. Card-related financial totals must be calculated exclusively from manually registered transactions.
+14. Financial totals must respect the selected period and applicable transaction status.
+15. Cards must not display real bank balances, available credit limits, automatically generated invoices, or installment information.
+16. FinCore must not request or store full card numbers, CVV, PINs, or banking credentials.
+
+#### Card Removal Behavior (Approved)
+
+When a user removes a registered card, all financial transactions previously associated with that card must remain in the system. The transactions simply become unlinked from the removed card.
+
+Expected behavior:
+
+- Remove the card registration.
+- Preserve every associated transaction.
+- Remove the active association between those transactions and the deleted card.
+- Keep transaction amounts, dates, categories, descriptions, and statuses unchanged.
+- Maintain the user's financial history and reports.
+
+The removal confirmation must make clear that the card is removed permanently, that its transactions are preserved, and that they will no longer be linked to the card.
+
+> **Backend implementation note:** the transaction–card association must be optional, and removing a card must clear the association instead of cascading the deletion (for example, a nullable foreign key with `ON DELETE SET NULL`, and no cascade removal or orphan removal in the persistence mapping). No card or transaction entities exist yet; this must be respected when they are modeled.
+
+#### Card Institution and Visual Identity
+
+The user may optionally select a financial institution, such as Nubank, Itaú, Bradesco, or another institution. FinCore may suggest a corresponding card color or visual theme.
+
+- Card designs must remain original visual representations.
+- FinCore must not imply that it issues cards, maintains partnerships with these institutions, or accesses their banking systems.
+- Institution identification is informational only.
+
+#### Open Questions — Cards
+
+The following points are not yet defined and must not be treated as approved requirements:
+
+- Which transaction statuses count toward each card total (for example, effective totals versus planned amounts shown separately).
+- How institution-based visual theme suggestions are defined, and the list of supported institutions.
+- Whether card nicknames must be unique per user.
+- Whether cards are related to financial accounts.
+
 Detailed business rules, API contracts, and screen behavior must be approved before implementation.
 
 ### Out of Scope for V1
