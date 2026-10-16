@@ -1,274 +1,345 @@
 # FinCore — Product Definition
 
+This document is the single source of truth for FinCore product scope and business rules.
+
 ## 1. Product Overview
 
-FinCore is a personal financial management web application designed to help users record, visualize, analyze, and make better decisions about their finances.
+FinCore is a personal finance management platform built around three principles:
 
-The application is being developed as a full-stack portfolio project, demonstrating backend engineering, REST API development, authentication, frontend integration, and product-oriented UI/UX design.
+**Registrar. Visualizar. Decidir.**
 
-Development is incremental and divided into three versions: V1 (MVP), V2, and V3.
+It helps users organize their financial information, understand their financial behavior, and make more informed decisions. It is intended both for beginners and for users who want to organize the transactions associated with their cards.
 
-Only approved V1 capabilities should be implemented in the initial release.
+### Core Product Principles
+
+- Simple and intuitive financial organization.
+- Manual financial transaction registration.
+- Clear financial visualization.
+- Useful information for financial decision-making.
+- Accessible and professional user experience.
+- No mandatory banking integration.
+
+FinCore does not operate as a bank, issue payment cards, or execute financial transfers.
+
+### Audiences
+
+**Application users:** individuals in Brazil who want to organize personal financial information, review transactions, and understand spending patterns.
+
+**Portfolio reviewers:** recruiters, hiring managers, and prospective clients evaluating the developer's technical capabilities.
+
+During portfolio evaluation, fictional demonstration data may be used. The project must not claim to have real customers or fabricated usage metrics.
+
+### Positioning
+
+FinCore is a full-stack portfolio project and must demonstrate both engineering depth and product quality, not a static finance-dashboard demonstration. The final application must demonstrate:
+
+- Real REST API integration between the React frontend and the Spring Boot backend.
+- Authentication and authorization.
+- Business rules implemented in the backend.
+- Persistent data.
+- Consistent UI/UX with loading, empty, and error states.
+- Automated tests where applicable.
 
 ## 2. Platform & Technology Stack
 
 FinCore is a web application developed in a single Git repository (monorepo).
 
-### Backend
+- **Backend:** Java 21, Spring Boot, Spring Web (REST API), Spring Data JPA, Spring Security, PostgreSQL, Flyway, Bean Validation, Maven.
+- **Frontend:** React, TypeScript, Vite, Tailwind CSS.
+- **Design:** Figma, Figma MCP, Impeccable.
 
-- Java 21
-- Spring Boot
-- Spring Web / REST API
-- Spring Data JPA
-- Spring Security
-- PostgreSQL
-- Flyway
-- Bean Validation
-- Maven
-
-### Frontend
-
-- React
-- TypeScript
-- Vite
-- Tailwind CSS
-
-### Design
-
-- Figma
-- Figma MCP
-- Impeccable
-
-### Repository Structure
+Repository structure:
 
 - `backend/fincore-api/` — REST API, business logic, authentication, and persistence.
 - `frontend/` — Web application.
 - `docs/` — Product requirements, architecture, API contracts, and design documentation.
 
-## 3. Target Audience
+## 3. Product Roadmap
 
-FinCore has two relevant audiences.
+Development is incremental. Only V1 capabilities belong to the initial release; V2 and V3 features must not be presented as available in V1.
 
-**Application users:** Individuals in Brazil who want to organize personal financial information, monitor balances, review transactions, and understand spending patterns.
+### V1 — MVP
 
-**Portfolio reviewers:** Recruiters, hiring managers, and prospective clients evaluating the developer's technical capabilities.
+- User registration and authentication.
+- `USER` and `ADMIN` roles.
+- Account activation and deactivation.
+- Income and expense management.
+- Planned and completed transaction statuses.
+- Predefined and custom categories.
+- Transaction filtering.
+- Manual payment method registration.
+- Basic card registration and management.
+- Initial financial dashboard.
+- Financial visualization by period and category.
 
-During portfolio evaluation, fictional demonstration data may be used. The project must not claim to have real customers or fabricated usage metrics.
+### V2 — Financial Planning
 
-## 4. Product Objectives
+- Monthly category budgets.
+- Category spending limits.
+- Financial planning tools.
+- More detailed debit and Pix management.
 
-FinCore aims to:
+### V3 — Advanced Credit Card Management
 
-- Centralize financial information.
-- Allow users to register and review financial movements.
-- Present financial information through intuitive dashboards.
-- Help users understand spending behavior and cash flow.
-- Demonstrate a functional integration between a React frontend and a Spring Boot REST API.
+- Credit card billing cycles.
+- Invoice management.
+- Installment purchases.
+- More complete credit card expense tracking.
+- Advanced debit card functionality.
 
-## 5. Product Positioning
+### Outside the Current Roadmap
 
-FinCore should demonstrate both engineering depth and product quality.
+- Savings goals with targets and deadlines are out of scope for V1 and are not part of the V2 or V3 plans.
 
-It should not be merely a static finance-dashboard demonstration.
+## 4. MVP Functional Requirements
 
-The final application must demonstrate:
+Detailed API contracts and screen behavior must be approved before implementation.
 
-- Real REST API integration.
-- Authentication and authorization.
-- Business rules implemented in the backend.
-- Persistent data.
-- Consistent UI/UX.
-- Loading, empty, and error states.
-- Automated tests where applicable.
+### 4.1 Users and Authentication
 
-## 6. Version 1 — MVP Scope
+Users authenticate with **email and password**.
 
-### Accounts & Transactions
+User information:
 
-- Support multiple financial accounts.
-- Display account balances.
-- Register and visualize financial transactions.
-- Organize transactions into categories.
-- Search and filter financial movements.
+- Unique identifier.
+- Name.
+- Email.
+- Password credential.
+- Role: `USER` or `ADMIN`.
+- Account status: `ACTIVE` or `INACTIVE`.
 
-### Reports & Insights
+Regular users can:
 
-- Spending distribution by category.
-- Cash flow visualization over time.
-- Month-over-month financial comparison.
+- Register an account.
+- Authenticate.
+- Access their own information.
+- View and update supported profile information.
+- Deactivate their own account.
+- Reactivate their account through the approved reactivation mechanism (pending, see §11).
 
-### Cards Management — MVP V1
+Administrators can:
 
-Cards in FinCore are manually registered financial instruments used to organize transactions.
+- List registered users.
+- Search for users by ID.
+- Activate users.
+- Deactivate users.
 
-FinCore does not issue cards and does not connect directly to financial institutions.
+### 4.2 Transactions
 
-#### Card Registration
+Users manually register financial transactions.
+
+| Field | Required | Notes |
+|---|---|---|
+| Type | Yes | `INCOME` or `EXPENSE` |
+| Amount | Yes | BRL |
+| Date | Yes | Past, current, or future dates are allowed |
+| Category | Yes | Predefined or custom, of the same type |
+| Status | Yes | `PLANNED` (Prevista) or `COMPLETED` (Efetivada), defined manually by the user |
+| Description | No | |
+| Notes | No | |
+| Card | No | Association with a registered card, when applicable |
+
+Users can register, view, update, and permanently delete their transactions.
+
+Transaction listings support pagination and filtering by:
+
+- Period.
+- Transaction type.
+- Category.
+- Status.
+
+### 4.3 Categories
+
+FinCore supports predefined and user-created categories. Each category has a name, a type (`INCOME` or `EXPENSE`), a color, and an icon.
+
+- FinCore provides a set of predefined categories available to all users. The official list must be confirmed before implementation.
+- Users can create, edit, and delete their own custom categories.
+- Users can associate transactions with predefined or custom categories of the matching type.
+
+### 4.4 Cards
+
+Cards are manually registered financial instruments used to organize transactions. FinCore does not issue cards or integrate directly with financial institutions.
 
 | Field | Required | Description |
 |---|---|---|
 | Nickname | Yes | User-defined name to identify the card |
 | Card Type | Yes | `CREDIT` or `DEBIT` |
-| Financial Institution | No | Optional institution identification |
+| Financial Institution | No | Optional, informational identification |
 | Last Four Digits | No | Optional card identification |
 | Visual Theme / Color | No | Optional card appearance |
 
-#### Business Rules
+Users can register, view, edit, and permanently remove their cards, and inspect the transactions associated with each card.
 
-1. Each card belongs to a specific authenticated user.
-2. Users may view and manage only their own cards.
-3. A card must have a nickname and type.
-4. Card types are `CREDIT` and `DEBIT`.
-5. Financial institution information is optional.
-6. The last four digits are optional. If provided, they must contain exactly four numeric digits.
-7. The visual theme is optional. The system may suggest a visual style based on the selected institution.
-8. Users may edit their registered card information.
-9. Users may remove their registered cards.
-10. Removing a card must never delete its associated financial transactions.
-11. When a card is removed, its associated transactions must remain in the user's financial history and become unlinked from that card.
-12. Card removal is permanent in MVP V1, but does not affect transaction records.
-13. Card-related financial totals must be calculated exclusively from manually registered transactions.
-14. Financial totals must respect the selected period and applicable transaction status.
-15. Cards must not display real bank balances, available credit limits, automatically generated invoices, or installment information.
-16. FinCore must not request or store full card numbers, CVV, PINs, or banking credentials.
+### 4.5 Payment Methods
 
-#### Card Removal Behavior (Approved)
+Initial payment methods:
 
-When a user removes a registered card, all financial transactions previously associated with that card must remain in the system. The transactions simply become unlinked from the removed card.
+- Pix.
+- Registered cards.
 
-Expected behavior:
+Manual transaction registration remains the primary mechanism. There are no banking integrations or automatic payment processing. Detailed distinctions between Pix, debit, and credit card accounting follow the roadmap (V2 and V3).
+
+### 4.6 Dashboard
+
+The dashboard presents the user's financial situation based exclusively on manually registered data.
+
+Financial overview for the selected period:
+
+- Total income.
+- Total expenses.
+- Financial result.
+- Planned transactions, when relevant.
+
+Visualization:
+
+- Daily, weekly, and monthly views.
+- Navigation between periods, including future periods.
+
+Charts and indicators:
+
+- Financial evolution.
+- Income and expense comparison, including comparison with the previous period.
+- Category distribution.
+- Recent transactions.
+- Registered cards, with access to their associated transactions.
+
+### 4.7 Profile and Settings
+
+Users access their profile through the application navigation.
+
+- **Profile information:** name, email, and account status. Users may edit approved profile fields.
+- **Security:** email and password authentication is required.
+- **Account management:** reversible account deactivation that preserves the user's financial records.
+- **Sign out:** users must be able to sign out.
+
+### 4.8 Localization and Preferences
+
+The MVP uses fixed preferences, without additional preference controls:
+
+- Language: Brazilian Portuguese (pt-BR).
+- Currency: Brazilian Real (BRL).
+- Date format: DD/MM/YYYY.
+- Default theme: Dark Mode.
+
+Internationalization is outside the initial scope.
+
+## 5. Module Business Rules
+
+### 5.1 Users and Accounts
+
+1. Users access only their own information; administrators manage accounts through the administrator capabilities in §4.1.
+2. Account status changes must follow authorization rules.
+3. Account deactivation is reversible and is not equivalent to permanent account deletion.
+4. Deactivation does not delete financial records.
+
+### 5.2 Transactions
+
+1. The user defines the transaction status manually. The system must not determine the status solely from the transaction date.
+2. Deleting a transaction is permanent in V1.
+3. Users manage only their own transactions.
+
+### 5.3 Categories
+
+**Predefined categories**
+
+1. Predefined categories cannot be edited or deleted by regular users.
+
+**Custom categories**
+
+1. Custom categories belong to the user who created them, and users manage only their own.
+2. Category names must be unique within the same category type and user scope.
+3. A name that conflicts with an available predefined category of the same type must be rejected.
+4. The category type may be changed only when the category has no associated transactions; otherwise, the change must be blocked.
+
+**Deleting a custom category**
+
+- Without associated transactions: the category may be permanently deleted after confirmation.
+- With associated transactions:
+  1. Require a replacement category.
+  2. The replacement must belong to the same transaction type.
+  3. The replacement may be predefined or custom.
+  4. Preserve all existing transactions.
+  5. Reassign those transactions to the replacement category.
+  6. Delete the original category only after a successful reassignment.
+
+### 5.4 Cards
+
+1. Each card belongs to a specific authenticated user, and users manage only their own cards.
+2. A card must have a nickname and a type (`CREDIT` or `DEBIT`).
+3. The last four digits are optional. If provided, they must contain exactly four numeric digits.
+4. The financial institution is optional and may be used to suggest a visual card theme.
+5. Card-related amounts must be calculated exclusively from manually registered transactions, respecting the selected period and transaction status.
+6. Cards must not display real bank balances, available credit limits, automatically generated invoices, installment information, or automatically synchronized banking information.
+7. FinCore must not request or store full card numbers, CVV, PINs, or banking credentials.
+
+**Card removal (approved)**
+
+Card removal is permanent in V1 and never deletes financial records. When a user removes a card:
 
 - Remove the card registration.
 - Preserve every associated transaction.
-- Remove the active association between those transactions and the deleted card.
+- Remove the association between those transactions and the card.
 - Keep transaction amounts, dates, categories, descriptions, and statuses unchanged.
-- Maintain the user's financial history and reports.
+- Keep the user's financial history and reports intact.
 
 The removal confirmation must make clear that the card is removed permanently, that its transactions are preserved, and that they will no longer be linked to the card.
 
-> **Backend implementation note:** the transaction–card association must be optional, and removing a card must clear the association instead of cascading the deletion (for example, a nullable foreign key with `ON DELETE SET NULL`, and no cascade removal or orphan removal in the persistence mapping). No card or transaction entities exist yet; this must be respected when they are modeled.
+> **Backend implementation note:** the transaction–card association must be optional, and removing a card must clear the association instead of cascading the deletion (for example, a nullable foreign key with `ON DELETE SET NULL`, and no cascade or orphan removal in the persistence mapping).
 
-#### Card Institution and Visual Identity
+**Institution and visual identity**
 
-The user may optionally select a financial institution, such as Nubank, Itaú, Bradesco, or another institution. FinCore may suggest a corresponding card color or visual theme.
-
+- Users may optionally select a financial institution, such as Nubank, Itaú, Bradesco, or another institution.
 - Card designs must remain original visual representations.
-- FinCore must not imply that it issues cards, maintains partnerships with these institutions, or accesses their banking systems.
-- Institution identification is informational only.
+- FinCore must not imply that it issues cards, maintains partnerships with these institutions, or accesses their banking systems. Institution identification is informational only.
 
-#### Open Questions — Cards
+## 6. Data Integrity and Authorization
 
-The following points are not yet defined and must not be treated as approved requirements:
+These rules must stay consistent across documentation, frontend behavior, backend implementation, and tests:
 
-- Which transaction statuses count toward each card total (for example, effective totals versus planned amounts shown separately).
-- How institution-based visual theme suggestions are defined, and the list of supported institutions.
-- Whether card nicknames must be unique per user.
-- Whether cards are related to financial accounts.
+- Every user-specific resource respects authenticated user ownership. Users must not access or modify other users' private financial information.
+- Deleting a card preserves its transactions and removes the card associations.
+- Deleting a category with transactions requires reassignment to a compatible category.
+- Deleting a transaction is permanent in V1.
+- Deactivating a user preserves financial records.
+- Financial totals reflect the applicable period and transaction status. Summaries must consistently distinguish planned from completed transactions and must not mix statuses without clearly indicating the basis of the calculation.
+- The financial result must not be represented as a real bank account balance.
+- All transaction registration is manual in the MVP.
+- The interface must not suggest unsupported financial integrations or capabilities.
 
-Detailed business rules, API contracts, and screen behavior must be approved before implementation.
-
-### Out of Scope for V1
-
-- Category-based budgets and monthly limits.
-- Savings goals with targets and deadlines.
-
-These capabilities may be evaluated for V2 or V3.
-
-## 7. Development Strategy
-
-Backend and frontend will be developed in parallel.
-
-### Backend Development
-
-The developer is responsible for the Spring Boot REST API, including:
-
-- Domain modeling.
-- Business rules.
-- Persistence.
-- Authentication and authorization.
-- Endpoints and DTOs.
-- Validation and testing.
-
-Claude Code may assist with explicitly delegated tasks.
-
-### Frontend Development
-
-Claude Code will assist with:
-
-- UI/UX design.
-- Design system.
-- Figma prototypes.
-- React components.
-- Responsive layouts.
-- Frontend testing.
-- Git commits under the approved workflow.
-
-### Temporary Mock Data
-
-During frontend development, temporary mock data may be used to implement and validate the interface before the corresponding API endpoints are available.
-
-Mock data must:
-
-- Be clearly identifiable as fictional.
-- Remain isolated from presentation components.
-- Be replaceable by API integration.
-- Never be presented as real production information.
-
-### Final MVP Integration
-
-The final integrated MVP must consume the FinCore REST API.
-
-The backend is the source of truth for financial data, calculations, persistence, and business rules.
-
-Mock data must not silently replace missing API responses in the final integrated application.
-
-## 8. UX & Design Principles
+## 7. UX & Design Principles
 
 - Prioritize clarity, consistency, and usability.
 - Maintain a unified visual identity across the landing page and dashboard.
-- Use accessible, reusable components.
-- Provide responsive layouts.
+- Use accessible, reusable components and responsive layouts.
 - Handle loading, empty, error, and relevant stale-data states.
 - Display financial values accurately.
 - Avoid unnecessary visual complexity.
 
 Visual references must be analyzed and approved before establishing the design system.
 
-## 9. Localization
+## 8. Development Strategy
 
-The MVP interface will use:
+Backend and frontend are developed in parallel.
 
-- Portuguese (pt-BR).
-- Brazilian Real (BRL).
-- Brazilian date and numeric formats.
+**Backend:** the developer is responsible for the Spring Boot REST API, including domain modeling, business rules, persistence, authentication and authorization, endpoints and DTOs, and validation and testing. Claude Code may assist with explicitly delegated tasks.
 
-Internationalization is outside the initial scope.
+**Frontend:** Claude Code assists with UI/UX design, the design system, Figma prototypes, React components, responsive layouts, frontend testing, and Git commits under the approved workflow.
 
-## 10. Open Decisions
+**Temporary mock data:** during frontend development, mock data may be used before the corresponding API endpoints are available. Mock data must be clearly identifiable as fictional, remain isolated from presentation components, be replaceable by API integration, and never be presented as real production information.
 
-The following decisions remain open:
+**Final MVP integration:** the integrated MVP must consume the FinCore REST API. The backend is the source of truth for financial data, calculations, persistence, and business rules. Mock data must not silently replace missing API responses.
 
-- Detailed authentication and authorization flows.
-- Demo account or seeded demonstration environment for portfolio reviewers.
-- Final deployment architecture and hosting providers.
-- Detailed API contracts.
-- Approved visual identity and screen flows.
+## 9. Product Documentation
 
-Do not treat open decisions as approved requirements.
+Approved decisions are documented progressively, only when needed:
 
-## 11. Product Documentation
-
-Approved decisions should be documented progressively:
-
-- `PRODUCT.md` — Product vision and approved scope.
+- `PRODUCT.md` — Product vision, approved scope, and business rules.
 - `DESIGN.md` — Approved visual identity and design system.
 - `SCREENS.md` — Approved screen flows and interface states.
 - `API-CONTRACTS.md` — Approved REST API contracts.
 - `ARCHITECTURE.md` — Architectural decisions when defined.
 
-Create supporting documentation only when needed.
-
-## 12. Product Principles
+## 10. Product Principles
 
 1. Build a functional product, not only a visual demonstration.
 2. Keep the backend as the source of truth.
@@ -276,3 +347,27 @@ Create supporting documentation only when needed.
 4. Prioritize correctness, maintainability, and clear financial information.
 5. Implement the MVP before expanding into V2 and V3.
 6. Never introduce unapproved business requirements.
+
+## 11. Pending Product Decisions
+
+The points below are unresolved and must not be treated as approved requirements.
+
+**Product rules**
+
+- Official list of predefined categories.
+- Category name normalization (case and accents) and length limits.
+- Email update verification requirements.
+- Password change requirements, including whether password change is part of V1.
+- Account self-reactivation flow.
+- Payment method accounting details not yet approved, including how Pix and card usage are recorded on a transaction.
+- Destination after sign-out (unauthenticated route).
+- Financial accounts: the previous scope listed multiple financial accounts and account balances in V1, but the confirmed roadmap does not include them. Confirm whether they are removed.
+- Transaction text search and filtering by card: the previous scope mentioned searching transactions, but the confirmed filters are period, type, category, and status.
+- Whether card nicknames must be unique per user, and how institution-based theme suggestions are defined.
+
+**Project decisions**
+
+- Demo account or seeded demonstration environment for portfolio reviewers.
+- Deployment architecture and hosting providers.
+- Detailed API contracts.
+- Approved visual identity and screen flows.
