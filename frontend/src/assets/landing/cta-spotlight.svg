@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="820" viewBox="0 0 1440 820" fill="none">
+  <!-- Figma: Section 07 · "Background / Spotlight · State A (base)" (ambient halo, spotlight beam, floor).
+       Layer blur radius r → feGaussianBlur stdDeviation r/2. Static asset, rasterised once. -->
+  <defs>
+    <filter id="b80" filterUnits="userSpaceOnUse" x="-300" y="-300" width="2040" height="1420"><feGaussianBlur stdDeviation="80"/></filter>
+    <filter id="b24" filterUnits="userSpaceOnUse" x="-300" y="-300" width="2040" height="1420"><feGaussianBlur stdDeviation="24"/></filter>
+    <filter id="b13" filterUnits="userSpaceOnUse" x="-300" y="-300" width="2040" height="1420"><feGaussianBlur stdDeviation="13"/></filter>
+    <filter id="b8" filterUnits="userSpaceOnUse" x="-300" y="-300" width="2040" height="1420"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="b7" filterUnits="userSpaceOnUse" x="-300" y="-300" width="2040" height="1420"><feGaussianBlur stdDeviation="7"/></filter>
+    <filter id="b25" filterUnits="userSpaceOnUse" x="-300" y="-300" width="2040" height="1420"><feGaussianBlur stdDeviation="25"/></filter>
+    <filter id="b12" filterUnits="userSpaceOnUse" x="-300" y="-300" width="2040" height="1420"><feGaussianBlur stdDeviation="12"/></filter>
+
+    <linearGradient id="outer" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#CCBDFF" stop-opacity="0"/>
+      <stop offset="0.09" stop-color="#CCBDFF" stop-opacity="0"/>
+      <stop offset="0.22" stop-color="#CCBDFF" stop-opacity="0.3"/>
+      <stop offset="0.42" stop-color="#8C5CF5" stop-opacity="0.18"/>
+      <stop offset="0.74" stop-color="#4A29B2" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#4A29B2" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="core" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#CCBDFF" stop-opacity="0"/>
+      <stop offset="0.1" stop-color="#CCBDFF" stop-opacity="0"/>
+      <stop offset="0.24" stop-color="#CCBDFF" stop-opacity="0.4"/>
+      <stop offset="0.48" stop-color="#CCBDFF" stop-opacity="0.15"/>
+      <stop offset="0.85" stop-color="#8C5CF5" stop-opacity="0.03"/>
+      <stop offset="1" stop-color="#8C5CF5" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="rayRight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#CCBDFF" stop-opacity="0"/>
+      <stop offset="0.11" stop-color="#CCBDFF" stop-opacity="0"/>
+      <stop offset="0.26" stop-color="#CCBDFF" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#CCBDFF" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="rayLeft" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8C5CF5" stop-opacity="0"/>
+      <stop offset="0.12" stop-color="#8C5CF5" stop-opacity="0"/>
+      <stop offset="0.28" stop-color="#8C5CF5" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#8C5CF5" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Ambient halo -->
+  <ellipse cx="720" cy="400" rx="450" ry="280" fill="#4A29B2" fill-opacity="0.16" filter="url(#b80)"/>
+
+  <!-- Spotlight beam -->
+  <polygon points="748,-60 842,-60 1010,660 430,660" fill="url(#outer)" filter="url(#b24)"/>
+  <polygon points="774,-60 816,-60 880,600 590,600" fill="url(#core)" filter="url(#b13)"/>
+  <polygon points="800,-60 812,-60 930,560 860,560" fill="url(#rayRight)" filter="url(#b7)"/>
+  <polygon points="770,-60 780,-60 620,520 560,520" fill="url(#rayLeft)" filter="url(#b8)"/>
+
+  <!-- Floor -->
+  <ellipse cx="720" cy="655" rx="400" ry="55" fill="#8C5CF5" fill-opacity="0.14" filter="url(#b25)"/>
+  <ellipse cx="720" cy="648" rx="250" ry="12" fill="#CCBDFF" fill-opacity="0.09" filter="url(#b12)"/>
+</svg>

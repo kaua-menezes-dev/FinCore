@@ -77,6 +77,22 @@ export const FAQ_REVEAL = {
 } as const
 
 /**
+ * Final CTA (Section 07): heading, supporting text and button use the
+ * same one-time scroll reveal as Sections 04–06. The spotlight is static.
+ */
+export const FINAL_CTA_REVEAL = {
+  item: FEATURED_FEATURES_REVEAL.item,
+  stagger: FEATURED_FEATURES_REVEAL.headerStagger,
+  viewportMargin: FEATURED_FEATURES_REVEAL.viewportMargin,
+} as const
+
+/** Footer: a single short fade, triggered as soon as it enters the viewport. */
+export const FOOTER_REVEAL = {
+  item: { delay: 0, duration: 0.6, y: 8, ease: [0.25, 0.46, 0.45, 0.94] },
+  viewportMargin: '0px',
+} as const satisfies { item: RevealTiming; viewportMargin: string }
+
+/**
  * "Conheça o FinCore" scroll storyboard (Figma: Section 03 spec).
  * Everything is scrubbed by scroll position — nothing runs on a timer.
  */

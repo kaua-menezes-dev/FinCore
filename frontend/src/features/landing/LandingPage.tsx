@@ -1,5 +1,7 @@
 import { Faq } from './components/Faq'
 import { FeaturedFeatures } from './components/FeaturedFeatures'
+import { FinalCta } from './components/FinalCta'
+import { Footer } from './components/Footer'
 import { GettingStarted } from './components/GettingStarted'
 import { Hero } from './components/Hero'
 import { HowItWorks } from './components/HowItWorks'
@@ -17,7 +19,9 @@ export function LandingPage() {
         <FeaturedFeatures />
         <GettingStarted />
         <Faq />
+        <FinalCta />
       </main>
+      <Footer />
     </div>
   )
 }
