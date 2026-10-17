@@ -9,6 +9,7 @@
   --breakpoint-lg: 70rem; /* 1120px — desktop (single-line hero headline) */
 
   --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, monospace;
 
   --color-bg: #0a0a0f;
   --color-bg-secondary: #111118;
@@ -18,6 +19,8 @@
   --color-fg-muted: #a5a8b8;
   --color-accent: #7c5cff;
   --color-accent-hover: #9277ff;
+  /* Deeper violet used only by the ambient background lighting. */
+  --color-accent-deep: #5b3fe0;
 }
 
 @layer base {
@@ -31,5 +34,59 @@
 
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-accent-hover;
+  }
+}
+
+@layer components {
+  /* Gradient hairline border (Figma: inside stroke, #F5F7FB 10% → 4%). */
+  .hairline-gradient::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(to bottom, rgb(245 247 251 / 0.1), rgb(245 247 251 / 0.04));
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /*
+   * Ambient lighting layers (see AmbientGlow). Only opacity and transform
+   * animate, so each blurred layer is rasterized once and then composited.
+   */
+  .ambient-glow-layer {
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    filter: blur(var(--glow-blur, 80px));
+    opacity: var(--glow-rest);
+    will-change: transform, opacity;
+    animation: ambient-drift var(--glow-duration) ease-in-out var(--glow-delay) infinite alternate
+      both;
+  }
+
+  .ambient-glow[data-paused] .ambient-glow-layer {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ambient-glow-layer {
+      animation: none;
+      will-change: auto;
+    }
+  }
+}
+
+@keyframes ambient-drift {
+  from {
+    opacity: var(--glow-min);
+    transform: none;
+  }
+  to {
+    opacity: var(--glow-max);
+    transform: translate3d(var(--glow-dx), var(--glow-dy), 0) scale(var(--glow-scale));
   }
 }
