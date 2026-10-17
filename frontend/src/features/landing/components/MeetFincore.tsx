@@ -54,15 +54,16 @@ export function MeetFincore() {
 
   // Pinned storyboard only when there is room for it and motion is welcome.
   const pinned = fitsViewport && !reduceMotion
-  const pinDistance = SCROLL.pinDistanceVh[layout === 'desktop' ? 'desktop' : 'compact']
+  const pinDistance = pinDistanceFor(layout)
 
   const { scrollYProgress: pinProgress } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end end'],
   })
-  const { scrollYProgress: pinnedEntrance } = useScroll({
+  // Approach part of the entrance: section top from 35% of the viewport to the top.
+  const { scrollYProgress: approachProgress } = useScroll({
     target: sectionRef,
-    offset: ['start end', 'start 0.15'],
+    offset: [`start ${SCROLL.entrance.startViewport}`, 'start start'],
   })
   const { scrollYProgress: flowEntrance } = useScroll({
     target: showcaseRef,
@@ -81,9 +82,17 @@ export function MeetFincore() {
     motionFlag.set(reduceMotion ? 0 : 1)
   }, [pinned, reduceMotion, pinnedFlag, motionFlag])
 
-  const entrance = useEntrance(pinnedEntrance, flowEntrance, pinnedFlag, motionFlag, geometry)
-  const reveal = useDestinationReveal(pinProgress, geometry, pinnedFlag)
-  const activeStep = useActiveStep(pinProgress, flowProgress, pinned)
+  const entrance = useEntrance({
+    approachProgress,
+    pinProgress,
+    flowEntrance,
+    pinnedFlag,
+    motionFlag,
+    geometry,
+  })
+  const sequence = useSequenceProgress(pinProgress, geometry)
+  const reveal = useDestinationReveal(sequence, geometry, pinnedFlag)
+  const activeStep = useActiveStep(sequence, flowProgress, pinned)
 
   return (
     <section
@@ -151,14 +160,14 @@ export function MeetFincore() {
               {pinned && (
                 <div aria-hidden="true" className="pointer-events-none absolute inset-0">
                   {layout !== 'mobile' && (
-                    <FloatingPopup target="transaction" index={0} progress={pinProgress} geometry={geometry} framed>
+                    <FloatingPopup target="transaction" index={0} progress={sequence} geometry={geometry} framed>
                       <TransactionRow transaction={revealedTransaction} divider={false} />
                     </FloatingPopup>
                   )}
-                  <FloatingPopup target="categories" index={1} progress={pinProgress} geometry={geometry}>
+                  <FloatingPopup target="categories" index={1} progress={sequence} geometry={geometry}>
                     <CategoriesPanel />
                   </FloatingPopup>
-                  <FloatingPopup target="result" index={2} progress={pinProgress} geometry={geometry}>
+                  <FloatingPopup target="result" index={2} progress={sequence} geometry={geometry}>
                     <PeriodResultCard />
                   </FloatingPopup>
                 </div>
@@ -171,24 +180,60 @@ export function MeetFincore() {
   )
 }
 
-/** Dashboard descends from above and fades in, scrubbed by scroll. */
-function useEntrance(
-  pinnedProgress: MotionValue<number>,
-  flowProgress: MotionValue<number>,
-  pinnedFlag: MotionValue<number>,
-  motionFlag: MotionValue<number>,
-  geometry: MotionValue<StageGeometry>,
-) {
-  const eased = () => {
-    if (!motionFlag.get()) return 1
-    return entranceEase((pinnedFlag.get() ? pinnedProgress : flowProgress).get())
+const clamp01 = (value: number) => Math.min(1, Math.max(0, value))
+const pinDistanceFor = (layout: StageLayout) =>
+  SCROLL.pinDistanceVh[layout === 'desktop' ? 'desktop' : 'compact']
+
+interface EntranceSources {
+  approachProgress: MotionValue<number>
+  pinProgress: MotionValue<number>
+  flowEntrance: MotionValue<number>
+  pinnedFlag: MotionValue<number>
+  motionFlag: MotionValue<number>
+  geometry: MotionValue<StageGeometry>
+}
+
+/**
+ * Dashboard descends from above and fades in, scrubbed by scroll. Pinned:
+ * the approach (section top 35% → 0 of the viewport) plus the first 55vh of
+ * the pin, so the descent is seen with the dashboard fully in view.
+ */
+function useEntrance(sources: EntranceSources) {
+  const { approachProgress, pinProgress, flowEntrance, pinnedFlag, motionFlag, geometry } = sources
+
+  // Every motion value is read up front so the transform always tracks all of them.
+  const progress = () => {
+    const approach = approachProgress.get()
+    const pin = pinProgress.get()
+    const flow = flowEntrance.get()
+    const pinned = pinnedFlag.get()
+    const allowed = motionFlag.get()
+    const layout = geometry.get().layout
+    if (!allowed) return 1
+    if (!pinned) return flow
+
+    const approachVh = SCROLL.entrance.startViewport * 100
+    const pinnedVh = SCROLL.entrance.pinnedVh
+    const inPin = clamp01((pin * pinDistanceFor(layout)) / pinnedVh)
+    return (approach * approachVh + inPin * pinnedVh) / (approachVh + pinnedVh)
   }
+
   const y = useTransform(() => {
+    const t = progress()
     const offset = SCROLL.entranceOffset[geometry.get().layout === 'desktop' ? 'desktop' : 'compact']
-    return -offset * (1 - eased())
+    return -offset * (1 - entranceEase(t))
   })
-  const opacity = useTransform(eased)
+  const opacity = useTransform(() => clamp01(progress() / SCROLL.entrance.fadeShare))
   return { y, opacity }
+}
+
+/** Pin progress after the entrance (0 → 1 over the pop-up sequence). */
+function useSequenceProgress(pinProgress: MotionValue<number>, geometry: MotionValue<StageGeometry>) {
+  return useTransform(() => {
+    const pin = pinProgress.get()
+    const start = SCROLL.entrance.pinnedVh / pinDistanceFor(geometry.get().layout)
+    return clamp01((pin - start) / (1 - start))
+  })
 }
 
 /** Destination components stay hidden until their pop-up docks (pinned mode only). */
@@ -197,10 +242,11 @@ function useDestinationReveal(
   geometry: MotionValue<StageGeometry>,
   pinnedFlag: MotionValue<number>,
 ) {
-  const opacityFor = (target: DashboardTarget, index: number) => () =>
-    pinnedFlag.get()
-      ? destinationOpacityAt(index, progress.get(), usesPopup(target, geometry.get().layout))
-      : 1
+  const opacityFor = (target: DashboardTarget, index: number) => () => {
+    const value = progress.get()
+    const layout = geometry.get().layout
+    return pinnedFlag.get() ? destinationOpacityAt(index, value, usesPopup(target, layout)) : 1
+  }
 
   return {
     transaction: useTransform(opacityFor('transaction', 0)),

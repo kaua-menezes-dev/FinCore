@@ -42,9 +42,15 @@ export const MEET_FINCORE_SCROLL = {
   /** Reference easing for the dashboard entrance and step changes. */
   ease: [0.25, 0.46, 0.45, 0.94] as const,
   /** Dashboard entrance: starts this many px above its final position. */
-  entranceOffset: { desktop: 64, compact: 40 },
-  /** Extra scroll distance while the section is pinned (vh). */
-  pinDistanceVh: { desktop: 240, compact: 180 },
+  entranceOffset: { desktop: 120, compact: 72 },
+  /**
+   * Entrance scroll range: it starts once the section top reaches 35% of
+   * the viewport and finishes 55vh into the pin, so most of the descent
+   * happens while the dashboard is fully on screen. Pop-ups start after it.
+   */
+  entrance: { startViewport: 0.35, pinnedVh: 55, fadeShare: 0.3 },
+  /** Extra scroll distance while the section is pinned (vh): entrance + pop-up sequence. */
+  pinDistanceVh: { desktop: 295, compact: 235 },
   /** Share of the pinned progress used by each pop-up; the rest is a final hold. */
   segment: 0.3,
   /** Phases inside one pop-up segment (0–1). */
