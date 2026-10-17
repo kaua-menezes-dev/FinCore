@@ -9,6 +9,7 @@
   --breakpoint-lg: 70rem; /* 1120px — desktop (single-line hero headline) */
 
   --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, monospace;
 
   --color-bg: #0a0a0f;
   --color-bg-secondary: #111118;
@@ -31,5 +32,22 @@
 
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-accent-hover;
+  }
+}
+
+@layer components {
+  /* Gradient hairline border (Figma: inside stroke, #F5F7FB 10% → 4%). */
+  .hairline-gradient::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(to bottom, rgb(245 247 251 / 0.1), rgb(245 247 251 / 0.04));
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
   }
 }

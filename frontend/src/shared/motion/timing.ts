@@ -24,6 +24,16 @@ export const HERO_ENTRANCE = {
   visual: { delay: 0.6, duration: 0.85, y: 24 },
 } satisfies Record<string, RevealTiming>
 
+/**
+ * "Como funciona" entrance, run once when the section scrolls into view:
+ * Eyebrow + heading → Description → Card carousel.
+ */
+export const HOW_IT_WORKS_ENTRANCE = {
+  heading: { delay: 0, duration: 0.7, y: 16 },
+  description: { delay: 0.12, duration: 0.65, y: 12 },
+  cards: { delay: 0.24, duration: 0.85, y: 24 },
+} satisfies Record<string, RevealTiming>
+
 /** Approved headline rotation spec (Figma: Hero Headline / Rotator). */
 export const HEADLINE_ROTATION = {
   /** Time between phrase changes. */
