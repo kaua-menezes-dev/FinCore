@@ -67,6 +67,16 @@ export const GETTING_STARTED_REVEAL = {
 } as const
 
 /**
+ * "Perguntas frequentes" (Section 06): the same one-time scroll reveal as
+ * Sections 04–05. The accordion fades in as one block, not row by row.
+ */
+export const FAQ_REVEAL = {
+  item: FEATURED_FEATURES_REVEAL.item,
+  headerStagger: FEATURED_FEATURES_REVEAL.headerStagger,
+  viewportMargin: FEATURED_FEATURES_REVEAL.viewportMargin,
+} as const
+
+/**
  * "Conheça o FinCore" scroll storyboard (Figma: Section 03 spec).
  * Everything is scrubbed by scroll position — nothing runs on a timer.
  */
