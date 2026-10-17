@@ -19,6 +19,13 @@
   --color-fg-muted: #a5a8b8;
   --color-accent: #7c5cff;
   --color-accent-hover: #9277ff;
+
+  /* App Foundations (Figma: FinCore App — Dashboard Home). */
+  --color-fg-faint: #6e7186;
+  --color-surface-inset: #1c1c2b;
+  --color-income: #3dd68c;
+  --color-expense: #ff6b7f;
+  --color-planned: #f2b95c;
 }
 
 @layer base {
