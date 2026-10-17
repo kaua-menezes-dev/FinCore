@@ -1,5 +1,6 @@
 import { Hero } from './components/Hero'
 import { HowItWorks } from './components/HowItWorks'
+import { MeetFincore } from './components/MeetFincore'
 import { Navbar } from './components/Navbar'
 
 export function LandingPage() {
@@ -9,6 +10,7 @@ export function LandingPage() {
       <main>
         <Hero />
         <HowItWorks />
+        <MeetFincore />
       </main>
     </div>
   )
