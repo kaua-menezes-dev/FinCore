@@ -55,6 +55,18 @@ export const FEATURED_FEATURES_REVEAL = {
 }
 
 /**
+ * "Como usar" scroll reveal (Section 05). Same motion as Section 04 so the
+ * two read as one flow, with a slightly wider stagger between the three
+ * step cards to underline their order.
+ */
+export const GETTING_STARTED_REVEAL = {
+  item: FEATURED_FEATURES_REVEAL.item,
+  headerStagger: FEATURED_FEATURES_REVEAL.headerStagger,
+  cardStagger: 0.1,
+  viewportMargin: FEATURED_FEATURES_REVEAL.viewportMargin,
+} as const
+
+/**
  * "Conheça o FinCore" scroll storyboard (Figma: Section 03 spec).
  * Everything is scrubbed by scroll position — nothing runs on a timer.
  */
