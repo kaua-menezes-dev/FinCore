@@ -1,4 +1,5 @@
 import { FeaturedFeatures } from './components/FeaturedFeatures'
+import { GettingStarted } from './components/GettingStarted'
 import { Hero } from './components/Hero'
 import { HowItWorks } from './components/HowItWorks'
 import { MeetFincore } from './components/MeetFincore'
@@ -13,6 +14,7 @@ export function LandingPage() {
         <HowItWorks />
         <MeetFincore />
         <FeaturedFeatures />
+        <GettingStarted />
       </main>
     </div>
   )
