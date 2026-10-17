@@ -1,0 +1,35 @@
+@import 'tailwindcss';
+
+/*
+ * FinCore design tokens — Obsidian Violet palette (docs/DESIGN.md).
+ * Geist stands in for Satoshi until the font decision is final.
+ */
+@theme {
+  --breakpoint-md: 48rem; /* 768px — tablet */
+  --breakpoint-lg: 70rem; /* 1120px — desktop (single-line hero headline) */
+
+  --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
+
+  --color-bg: #0a0a0f;
+  --color-bg-secondary: #111118;
+  --color-surface: #161622;
+  --color-border: #242438;
+  --color-fg: #f5f7fb;
+  --color-fg-muted: #a5a8b8;
+  --color-accent: #7c5cff;
+  --color-accent-hover: #9277ff;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-bg font-sans text-fg antialiased;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent-hover;
+  }
+}
