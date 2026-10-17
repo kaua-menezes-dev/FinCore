@@ -1,6 +1,7 @@
 import { motion, type MotionValue } from 'motion/react'
 import { CARD_ART, DONUT_SEGMENTS, ICONS, LEGEND_DOTS, TAG_DOTS, TRANSACTION_ICONS } from './assets'
 import {
+  CHART_GRANULARITIES,
   CURRENT_MONTH_TOOLTIP,
   EXPENSES_BY_CATEGORY,
   MONTHLY_TOTALS,
@@ -23,7 +24,7 @@ import {
 export const panelClass =
   'overflow-hidden rounded-[20px] border border-border bg-surface p-6'
 
-function Icon({ src, size }: { src: string; size: number }) {
+export function Icon({ src, size }: { src: string; size: number }) {
   return (
     <img
       src={src}
@@ -46,7 +47,7 @@ function PanelTitle({ title, subtitle }: { title: string; subtitle: string }) {
   )
 }
 
-function Segmented({ items, active }: { items: string[]; active: string }) {
+export function Segmented({ items, active }: { items: string[]; active: string }) {
   return (
     <div className="flex gap-0.5 rounded-full border border-border bg-bg-secondary p-[3px]">
       {items.map((item) => (
@@ -159,6 +160,46 @@ function FinancialOverview({ resultOpacity }: { resultOpacity?: MotionValue<numb
 
 /* ---------------------------------------------------------- Meus cartões */
 
+/** "Card stack (selecionável)" (Figma 43:157), 350 × 240. */
+export function CardStack() {
+  return (
+    <div className="relative h-60 w-[350px]">
+      <div className="absolute top-0 left-[24.8px] h-[190.8px] w-[302.4px] overflow-hidden rounded-[20px] border-[0.9px] border-white/12 bg-[linear-gradient(147.75deg,#2a2a3a_6.67%,#0f0f16_73.33%)] opacity-85">
+        {CARD_ART.contours.map((src, i) => {
+          const size = 180 + i * 39.6
+          return (
+            <img
+              key={src}
+              src={src}
+              alt=""
+              draggable={false}
+              className="absolute block max-w-none"
+              style={{ left: 179.1 - i * 5.4, top: 53.1 - i * 3.6, width: size, height: size }}
+            />
+          )
+        })}
+      </div>
+
+      <div className="absolute top-7 left-2 h-53 w-84 overflow-hidden rounded-[20px] border border-white/12 bg-[linear-gradient(147.75deg,#140d33_6.67%,#3b24a6_43.33%,#7c5cff_73.33%)] shadow-[0_16px_32px_-8px_rgb(0_0_0/0.45)]">
+        <img src={CARD_ART.lightOrb} alt="" draggable={false} className="absolute top-[-151px] left-[149px] block size-75 max-w-none" />
+        <img src={CARD_ART.ring} alt="" draggable={false} className="absolute top-[89px] left-[-171px] block size-80 max-w-none" />
+        <img src={CARD_ART.ring2} alt="" draggable={false} className="absolute top-[119px] left-[-141px] block size-65 max-w-none" />
+        <p className="absolute top-[17px] left-[21px] text-base leading-6 font-semibold tracking-[-0.01em] whitespace-nowrap text-fg">
+          {SELECTED_CARD.bank}
+        </p>
+        <img src={CARD_ART.contactless} alt="" draggable={false} className="absolute top-[19px] left-[293px] block size-5" />
+        <div className="absolute top-[77px] left-[21px] h-7 w-[38px] rounded-md bg-[linear-gradient(118.5deg,#ede8da_0%,#9c9684_71.43%)]" />
+        <p className="absolute top-[135px] left-[21px] font-mono text-sm leading-[18px] tracking-[0.04em] whitespace-pre text-fg">
+          {SELECTED_CARD.number}
+        </p>
+        <p className="absolute top-[175px] left-[21px] text-xs leading-4 font-medium whitespace-nowrap text-fg opacity-72">
+          {SELECTED_CARD.name}
+        </p>
+      </div>
+    </div>
+  )
+}
+
 function CardsPanel() {
   return (
     <div className={`${panelClass} flex h-139 flex-col gap-5`}>
@@ -170,40 +211,7 @@ function CardsPanel() {
         </span>
       </div>
 
-      <div className="relative h-60 w-full">
-        <div className="absolute top-0 left-[24.8px] h-[190.8px] w-[302.4px] overflow-hidden rounded-[20px] border-[0.9px] border-white/12 bg-[linear-gradient(147.75deg,#2a2a3a_6.67%,#0f0f16_73.33%)] opacity-85">
-          {CARD_ART.contours.map((src, i) => {
-            const size = 180 + i * 39.6
-            return (
-              <img
-                key={src}
-                src={src}
-                alt=""
-                draggable={false}
-                className="absolute block max-w-none"
-                style={{ left: 179.1 - i * 5.4, top: 53.1 - i * 3.6, width: size, height: size }}
-              />
-            )
-          })}
-        </div>
-
-        <div className="absolute top-7 left-2 h-53 w-84 overflow-hidden rounded-[20px] border border-white/12 bg-[linear-gradient(147.75deg,#140d33_6.67%,#3b24a6_43.33%,#7c5cff_73.33%)] shadow-[0_16px_32px_-8px_rgb(0_0_0/0.45)]">
-          <img src={CARD_ART.lightOrb} alt="" draggable={false} className="absolute top-[-151px] left-[149px] block size-75 max-w-none" />
-          <img src={CARD_ART.ring} alt="" draggable={false} className="absolute top-[89px] left-[-171px] block size-80 max-w-none" />
-          <img src={CARD_ART.ring2} alt="" draggable={false} className="absolute top-[119px] left-[-141px] block size-65 max-w-none" />
-          <p className="absolute top-[17px] left-[21px] text-base leading-6 font-semibold tracking-[-0.01em] whitespace-nowrap text-fg">
-            {SELECTED_CARD.bank}
-          </p>
-          <img src={CARD_ART.contactless} alt="" draggable={false} className="absolute top-[19px] left-[293px] block size-5" />
-          <div className="absolute top-[77px] left-[21px] h-7 w-[38px] rounded-md bg-[linear-gradient(118.5deg,#ede8da_0%,#9c9684_71.43%)]" />
-          <p className="absolute top-[135px] left-[21px] font-mono text-sm leading-[18px] tracking-[0.04em] whitespace-pre text-fg">
-            {SELECTED_CARD.number}
-          </p>
-          <p className="absolute top-[175px] left-[21px] text-xs leading-4 font-medium whitespace-nowrap text-fg opacity-72">
-            {SELECTED_CARD.name}
-          </p>
-        </div>
-      </div>
+      <CardStack />
 
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -247,6 +255,27 @@ function CardsPanel() {
 
 /* ------------------------------------------------ Despesas por categoria */
 
+/** Donut chart with its center total (Figma 43:231), 184 × 184. */
+export function CategoryDonut() {
+  return (
+    <div className="relative size-46 overflow-hidden">
+      <img src={ICONS.donutTrack} alt="" draggable={false} className="absolute inset-0 block size-46" />
+      {EXPENSES_BY_CATEGORY.categories.map((category) => (
+        <div key={category.id} className="absolute" style={{ inset: DONUT_SEGMENTS[category.id].inset }}>
+          <img src={DONUT_SEGMENTS[category.id].src} alt="" draggable={false} className="block size-full max-w-none" />
+        </div>
+      ))}
+      <div className="absolute top-[71px] left-[43px] flex w-[98px] flex-col items-center gap-0.5 whitespace-nowrap">
+        <p className="leading-6 font-semibold tracking-[-0.01em] text-fg">
+          <span className="text-xs text-fg-faint">R$ </span>
+          <span className="text-lg">{EXPENSES_BY_CATEGORY.total}</span>
+        </p>
+        <p className="text-xs leading-4 text-fg-faint">total de despesas</p>
+      </div>
+    </div>
+  )
+}
+
 /** "Despesas por categoria" panel (Figma 41:173), 400 × 492. */
 export function CategoriesPanel() {
   return (
@@ -259,21 +288,7 @@ export function CategoriesPanel() {
       </div>
 
       <div className="flex justify-center">
-        <div className="relative size-46 overflow-hidden">
-          <img src={ICONS.donutTrack} alt="" draggable={false} className="absolute inset-0 block size-46" />
-          {EXPENSES_BY_CATEGORY.categories.map((category) => (
-            <div key={category.id} className="absolute" style={{ inset: DONUT_SEGMENTS[category.id].inset }}>
-              <img src={DONUT_SEGMENTS[category.id].src} alt="" draggable={false} className="block size-full max-w-none" />
-            </div>
-          ))}
-          <div className="absolute top-[71px] left-[43px] flex w-[98px] flex-col items-center gap-0.5 whitespace-nowrap">
-            <p className="leading-6 font-semibold tracking-[-0.01em] text-fg">
-              <span className="text-xs text-fg-faint">R$ </span>
-              <span className="text-lg">{EXPENSES_BY_CATEGORY.total}</span>
-            </p>
-            <p className="text-xs leading-4 text-fg-faint">total de despesas</p>
-          </div>
-        </div>
+        <CategoryDonut />
       </div>
 
       <ul className="flex flex-col gap-3">
@@ -291,6 +306,35 @@ export function CategoriesPanel() {
 }
 
 /* -------------------------------------------------- Evolução financeira */
+
+/** "Dropdown — período do gráfico" (Figma 44:214). */
+export function ChartRangeDropdown() {
+  return (
+    <span className="flex h-[34px] items-center gap-2 rounded-full border border-border bg-bg-secondary pr-2.5 pl-3 text-xs leading-4 font-medium whitespace-nowrap text-fg">
+      <Icon src={ICONS.calendar14} size={14} />
+      {DASHBOARD_PERIOD.chartRange}
+      <Icon src={ICONS.chevronDown14} size={14} />
+    </span>
+  )
+}
+
+/** "Period selector" from the page header (Figma 41:150). */
+export function PeriodSelector() {
+  return (
+    <div className="flex items-center gap-1 rounded-full border border-border bg-bg-secondary p-1">
+      <span className="flex size-8 items-center justify-center rounded-2xl bg-surface-inset">
+        <Icon src={ICONS.chevronLeft16} size={16} />
+      </span>
+      <span className="flex items-center gap-2 px-2.5 text-sm leading-5 font-medium whitespace-nowrap text-fg">
+        <Icon src={ICONS.calendar16} size={16} />
+        {DASHBOARD_PERIOD.label}
+      </span>
+      <span className="flex size-8 items-center justify-center rounded-2xl bg-surface-inset">
+        <Icon src={ICONS.chevronRight16} size={16} />
+      </span>
+    </div>
+  )
+}
 
 const CHART = {
   /** px per R$: the 0 → 15 mil axis spans 184 px. */
@@ -320,12 +364,8 @@ function EvolutionPanel() {
       <div className="flex items-center justify-between">
         <PanelTitle title="Evolução financeira" subtitle="Receitas, despesas e resultado das movimentações efetivadas" />
         <div className="flex items-center gap-2.5">
-          <Segmented items={['Diário', 'Semanal', 'Mensal']} active="Mensal" />
-          <span className="flex h-[34px] items-center gap-2 rounded-full border border-border bg-bg-secondary pr-2.5 pl-3 text-xs leading-4 font-medium whitespace-nowrap text-fg">
-            <Icon src={ICONS.calendar14} size={14} />
-            {DASHBOARD_PERIOD.chartRange}
-            <Icon src={ICONS.chevronDown14} size={14} />
-          </span>
+          <Segmented items={[...CHART_GRANULARITIES]} active="Mensal" />
+          <ChartRangeDropdown />
         </div>
       </div>
 
@@ -425,8 +465,18 @@ function StatusBadge({ status }: { status: Transaction['status'] }) {
   )
 }
 
+interface TransactionRowProps {
+  transaction: Transaction
+  divider?: boolean
+  /**
+   * Description and amount only, 424 px wide — the framing used by the
+   * landing "Recursos em destaque" card (Categoria, Data and Status hidden).
+   */
+  compact?: boolean
+}
+
 /** One "Transaction row" (Figma 39:133), 878 × 60. */
-export function TransactionRow({ transaction, divider = true }: { transaction: Transaction; divider?: boolean }) {
+export function TransactionRow({ transaction, divider = true, compact = false }: TransactionRowProps) {
   const amountTone =
     transaction.kind === 'income'
       ? 'text-income'
@@ -435,7 +485,9 @@ export function TransactionRow({ transaction, divider = true }: { transaction: T
         : 'text-fg'
 
   return (
-    <div className={`flex h-15 w-[878px] items-center ${divider ? 'border-b border-border' : ''}`}>
+    <div
+      className={`flex h-15 items-center ${compact ? 'w-[424px]' : 'w-[878px]'} ${divider ? 'border-b border-border' : ''}`}
+    >
       <div className="flex h-full w-78 items-center gap-3 pl-3">
         <span className="flex size-9 items-center justify-center rounded-[10px] border border-border bg-surface-inset">
           <Icon src={TRANSACTION_ICONS[transaction.icon]} size={18} />
@@ -445,18 +497,22 @@ export function TransactionRow({ transaction, divider = true }: { transaction: T
           <p className="text-xs leading-4 text-fg-faint">{transaction.detail}</p>
         </div>
       </div>
-      <div className="flex h-full w-42 items-center">
-        <span className="flex h-6 items-center gap-1.5 rounded-full border border-border bg-surface-inset pr-2.5 pl-2 text-xs leading-4 font-medium whitespace-nowrap text-fg-muted">
-          <Icon src={TAG_DOTS[transaction.tag]} size={6} />
-          {transaction.category}
-        </span>
-      </div>
-      <p className="flex h-full w-32 items-center text-[13px] leading-[18px] whitespace-nowrap text-fg-muted">
-        {transaction.date}
-      </p>
-      <div className="flex h-full w-34 items-center">
-        <StatusBadge status={transaction.status} />
-      </div>
+      {!compact && (
+        <>
+          <div className="flex h-full w-42 items-center">
+            <span className="flex h-6 items-center gap-1.5 rounded-full border border-border bg-surface-inset pr-2.5 pl-2 text-xs leading-4 font-medium whitespace-nowrap text-fg-muted">
+              <Icon src={TAG_DOTS[transaction.tag]} size={6} />
+              {transaction.category}
+            </span>
+          </div>
+          <p className="flex h-full w-32 items-center text-[13px] leading-[18px] whitespace-nowrap text-fg-muted">
+            {transaction.date}
+          </p>
+          <div className="flex h-full w-34 items-center">
+            <StatusBadge status={transaction.status} />
+          </div>
+        </>
+      )}
       <p className={`flex h-full min-w-px flex-1 items-center justify-end text-sm leading-5 font-medium whitespace-nowrap ${amountTone}`}>
         {transaction.amount}
       </p>

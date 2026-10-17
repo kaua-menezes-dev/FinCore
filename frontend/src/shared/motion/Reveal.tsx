@@ -31,7 +31,7 @@ export function Reveal({ timing, when, className, children }: RevealProps) {
       transition={
         reduceMotion
           ? { duration: 0 }
-          : { delay: timing.delay, duration: timing.duration, ease: EASE_OUT_SOFT }
+          : { delay: timing.delay, duration: timing.duration, ease: timing.ease ?? EASE_OUT_SOFT }
       }
     >
       {children}

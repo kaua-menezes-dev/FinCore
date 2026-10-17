@@ -50,6 +50,9 @@ export const DASHBOARD_PERIOD = {
   chartRange: 'Nov 2025 – Out 2026',
 } as const
 
+/** "Segmented — granularidade" options of the Evolução financeira chart (Figma 44:205). */
+export const CHART_GRANULARITIES = ['Diário', 'Semanal', 'Mensal'] as const
+
 export const PERIOD_RESULT = {
   label: 'Resultado do período',
   value: '4.287,50',
@@ -214,3 +217,17 @@ export const RECENT_TRANSACTIONS: Transaction[] = [
     kind: 'income',
   },
 ]
+
+/**
+ * Default state of the "Filters toolbar" on App — Movimentações
+ * (Figma 53:524): October 2026, every filter at "Todas".
+ */
+export const TRANSACTION_FILTERS = {
+  searchPlaceholder: 'Buscar por descrição',
+  period: '01/10/2026 – 31/10/2026',
+  types: ['Todas', 'Receitas', 'Despesas'],
+  activeType: 'Todas',
+  category: 'Categoria: Todas',
+  status: 'Status: Todas',
+  clear: 'Limpar filtros',
+} as const
