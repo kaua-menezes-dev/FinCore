@@ -19,8 +19,6 @@
   --color-fg-muted: #a5a8b8;
   --color-accent: #7c5cff;
   --color-accent-hover: #9277ff;
-  /* Deeper violet used only by the ambient background lighting. */
-  --color-accent-deep: #5b3fe0;
 }
 
 @layer base {
@@ -51,42 +49,5 @@
       linear-gradient(#000 0 0);
     mask-composite: exclude;
     pointer-events: none;
-  }
-
-  /*
-   * Ambient lighting layers (see AmbientGlow). Only opacity and transform
-   * animate, so each blurred layer is rasterized once and then composited.
-   */
-  .ambient-glow-layer {
-    position: absolute;
-    inset: 0;
-    border-radius: 9999px;
-    filter: blur(var(--glow-blur, 80px));
-    opacity: var(--glow-rest);
-    will-change: transform, opacity;
-    animation: ambient-drift var(--glow-duration) ease-in-out var(--glow-delay) infinite alternate
-      both;
-  }
-
-  .ambient-glow[data-paused] .ambient-glow-layer {
-    animation-play-state: paused;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .ambient-glow-layer {
-      animation: none;
-      will-change: auto;
-    }
-  }
-}
-
-@keyframes ambient-drift {
-  from {
-    opacity: var(--glow-min);
-    transform: none;
-  }
-  to {
-    opacity: var(--glow-max);
-    transform: translate3d(var(--glow-dx), var(--glow-dy), 0) scale(var(--glow-scale));
   }
 }

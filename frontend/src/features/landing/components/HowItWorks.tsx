@@ -3,16 +3,11 @@ import { useRef } from 'react'
 import { Reveal } from '../../../shared/motion/Reveal'
 import { HOW_IT_WORKS_ENTRANCE } from '../../../shared/motion/timing'
 import { PILLARS } from '../pillars'
-import { AmbientGlow } from './AmbientGlow'
 import { PillarCarousel } from './PillarCarousel'
-
-/** Glow sits behind the cards: 312/614/1000 px wide, offset from the track top as in Figma. */
-const cardsGlow =
-  'top-[-40px] left-[calc(50%-156px)] h-65 w-78 [--glow-blur:80px] md:left-[calc(50%-307px)] md:w-[614px] lg:top-[-79px] lg:left-[calc(50%-500px)] lg:h-80 lg:w-250 lg:[--glow-blur:90px]'
 
 /**
  * Section 02 — "Como funciona": the three FinCore pillars.
- * Reveals once when scrolled into view; the background lighting breathes slowly.
+ * Reveals once when scrolled into view.
  */
 export function HowItWorks() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -51,7 +46,11 @@ export function HowItWorks() {
       </div>
 
       <div className="relative mt-9 md:mt-12 lg:mt-18">
-        <AmbientGlow className={cardsGlow} />
+        {/* Static glow behind the cards: 312/614/1000 px wide, offset from the track top as in Figma. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute top-[-40px] left-[calc(50%-156px)] -z-10 h-65 w-78 rounded-full bg-accent/7 blur-[80px] md:left-[calc(50%-307px)] md:w-[614px] lg:top-[-79px] lg:left-[calc(50%-500px)] lg:h-80 lg:w-250 lg:blur-[90px]"
+        />
         <Reveal when={inView} timing={HOW_IT_WORKS_ENTRANCE.cards}>
           <PillarCarousel pillars={PILLARS} />
         </Reveal>
