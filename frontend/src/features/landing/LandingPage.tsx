@@ -1,3 +1,4 @@
+import { Faq } from './components/Faq'
 import { FeaturedFeatures } from './components/FeaturedFeatures'
 import { GettingStarted } from './components/GettingStarted'
 import { Hero } from './components/Hero'
@@ -15,6 +16,7 @@ export function LandingPage() {
         <MeetFincore />
         <FeaturedFeatures />
         <GettingStarted />
+        <Faq />
       </main>
     </div>
   )
