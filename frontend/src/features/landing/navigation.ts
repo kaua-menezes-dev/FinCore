@@ -18,3 +18,9 @@ export const AUTH_LINKS = {
   login: '#',
   signUp: '#',
 } as const
+
+/** Legal pages (footer). No routes or content yet; placeholders like AUTH_LINKS. */
+export const LEGAL_LINKS: NavLink[] = [
+  { label: 'Privacidade', href: '#' },
+  { label: 'Termos', href: '#' },
+]
