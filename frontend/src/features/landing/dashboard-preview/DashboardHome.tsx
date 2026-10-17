@@ -8,6 +8,7 @@ import {
   CategoriesPanel,
   EvolutionPanel,
   FinancialOverview,
+  PeriodSelector,
   TransactionsPanel,
 } from './panels'
 
@@ -60,18 +61,7 @@ function PageHeader() {
         <p className="text-sm leading-5 text-fg-muted">{DASHBOARD_PERIOD.summary}</p>
       </div>
       <div className="flex items-center gap-3">
-        <div className="flex items-center gap-1 rounded-full border border-border bg-bg-secondary p-1">
-          <span className="flex size-8 items-center justify-center rounded-2xl bg-surface-inset">
-            <img src={ICONS.chevronLeft16} alt="" width={16} height={16} className="block size-4" />
-          </span>
-          <span className="flex items-center gap-2 px-2.5 text-sm leading-5 font-medium whitespace-nowrap text-fg">
-            <img src={ICONS.calendar16} alt="" width={16} height={16} className="block size-4" />
-            {DASHBOARD_PERIOD.label}
-          </span>
-          <span className="flex size-8 items-center justify-center rounded-2xl bg-surface-inset">
-            <img src={ICONS.chevronRight16} alt="" width={16} height={16} className="block size-4" />
-          </span>
-        </div>
+        <PeriodSelector />
         <span className="flex h-10 items-center gap-2 rounded-full border border-white/14 bg-accent pr-4.5 pl-4 text-sm leading-5 font-medium whitespace-nowrap text-fg">
           <img src={ICONS.plusPrimary} alt="" width={16} height={16} className="block size-4" />
           Nova movimentação

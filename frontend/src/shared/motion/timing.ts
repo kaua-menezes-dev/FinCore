@@ -9,6 +9,8 @@ export interface RevealTiming {
   duration: number
   /** Starting vertical offset in px (positive = starts lower). */
   y: number
+  /** Cubic-bezier curve; defaults to EASE_OUT_SOFT. */
+  ease?: readonly [number, number, number, number]
 }
 
 /**
@@ -33,6 +35,24 @@ export const HOW_IT_WORKS_ENTRANCE = {
   description: { delay: 0.12, duration: 0.65, y: 12 },
   cards: { delay: 0.24, duration: 0.85, y: 24 },
 } satisfies Record<string, RevealTiming>
+
+/**
+ * "Recursos em destaque" scroll reveal (Figma: Section 04 spec), run once
+ * as each part enters the viewport: header items 80 ms apart, then the
+ * mosaic cards 70 ms apart in reading order.
+ */
+export const FEATURED_FEATURES_REVEAL = {
+  item: { delay: 0, duration: 0.6, y: 24, ease: [0.25, 0.46, 0.45, 0.94] },
+  headerStagger: 0.08,
+  cardStagger: 0.07,
+  /** Starts when the element's top passes ~85% of the viewport height. */
+  viewportMargin: '0px 0px -15% 0px',
+} as const satisfies {
+  item: RevealTiming
+  headerStagger: number
+  cardStagger: number
+  viewportMargin: string
+}
 
 /**
  * "Conheça o FinCore" scroll storyboard (Figma: Section 03 spec).

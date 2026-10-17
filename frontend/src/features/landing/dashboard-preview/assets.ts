@@ -21,6 +21,11 @@ import chevronDown16 from '../../../assets/dashboard/chevron-down-16.svg'
 import chevronLeft16 from '../../../assets/dashboard/chevron-left-16.svg'
 import chevronRight16 from '../../../assets/dashboard/chevron-right-16.svg'
 import donutTrack from '../../../assets/dashboard/donut-track.svg'
+import filterCalendar16 from '../../../assets/dashboard/filter-calendar-16.svg'
+import filterCheck16 from '../../../assets/dashboard/filter-check-16.svg'
+import filterChevron14 from '../../../assets/dashboard/filter-chevron-14.svg'
+import filterReset16 from '../../../assets/dashboard/filter-reset-16.svg'
+import filterTag16 from '../../../assets/dashboard/filter-tag-16.svg'
 import kpiArrowDownLeft from '../../../assets/dashboard/kpi-arrow-down-left.svg'
 import kpiArrowUpRightAccent from '../../../assets/dashboard/kpi-arrow-up-right-accent.svg'
 import kpiArrowUpRightIncome from '../../../assets/dashboard/kpi-arrow-up-right-income.svg'
@@ -75,6 +80,15 @@ export const ICONS = {
   chartPoint,
   chartPointOut,
   donutTrack,
+}
+
+/** "Filters toolbar" icons from App — Movimentações (Figma 53:524). */
+export const FILTER_ICONS = {
+  calendar: filterCalendar16,
+  tag: filterTag16,
+  check: filterCheck16,
+  chevron: filterChevron14,
+  reset: filterReset16,
 }
 
 export const CARD_ART = {
