@@ -18,7 +18,7 @@ export interface Point {
 export interface StageGeometry {
   ready: boolean
   layout: StageLayout
-  /** Showcase panel size (px). */
+  /** Showcase (dashboard) size (px). */
   width: number
   height: number
   /** Dashboard canvas scale inside the showcase. */
@@ -43,8 +43,8 @@ export const EMPTY_GEOMETRY: StageGeometry = {
   },
 }
 
-/** Desktop showcase width the Figma rest positions are expressed in. */
-const DESIGN_SHOWCASE_WIDTH = 736
+/** Desktop dashboard width of the approved v2 design at 1440 px (Option B). */
+const DESIGN_DASHBOARD_WIDTH = 789
 
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value))
 const lerp = (from: number, to: number, t: number) => from + (to - from) * t
@@ -66,13 +66,16 @@ function restOf(target: DashboardTarget, geometry: StageGeometry) {
   const spec = POPUPS[target]
 
   if (geometry.layout === 'desktop') {
-    const k = geometry.width / DESIGN_SHOWCASE_WIDTH
-    return { x: spec.rest.x * k, y: spec.rest.y * k, scale: spec.rest.scale * k }
+    return {
+      x: spec.rest.x * geometry.width,
+      y: spec.rest.y * geometry.width,
+      scale: spec.rest.scale * geometry.scale,
+    }
   }
 
   // Tablet / mobile: centered over the showcase, on the side away from the destination.
   const scale = Math.min(
-    spec.rest.scale,
+    spec.compactScale,
     (geometry.width * 0.92) / spec.width,
     (geometry.height * 0.9) / spec.height,
   )
@@ -103,8 +106,14 @@ export interface PopupFrame {
   y: number
   scale: number
   opacity: number
-  /** Floating panel background + elevation; fades while it docks. */
+  /** Elevation of unframed pop-ups; fades while it docks. */
   chrome: number
+  /** Framed pop-up (transaction row): elevation, 1 → 0.1 in flight, 0 at handoff. */
+  elevation: number
+  /** Framed pop-up: opaque panel, visible until the handoff. */
+  panel: number
+  /** Framed pop-up: 0 = panel with padding, 1 = panel tightened onto the row. */
+  collapse: number
 }
 
 /** Pop-up transform/opacity for the pinned progress. */
@@ -118,18 +127,21 @@ export function popupFrameAt(
   const rest = restOf(target, geometry)
 
   if (!geometry.ready || u <= 0 || u >= 1) {
-    return { x: rest.x, y: rest.y, scale: rest.scale, opacity: 0, chrome: 1 }
+    return { x: rest.x, y: rest.y, scale: rest.scale, opacity: 0, chrome: 1, elevation: 1, panel: 1, collapse: 0 }
   }
 
   const { appearEnd, moveStart, handoffStart } = SCROLL.phases
   const appear = easeOutCubic(clamp01(u / appearEnd))
   const move = easeInOutCubic(clamp01((u - moveStart) / (1 - moveStart)))
   const destination = destinationOf(target, geometry)
-  const lift = (1 - appear) * SCROLL.appearLift * (geometry.width / DESIGN_SHOWCASE_WIDTH)
+  const lift = (1 - appear) * SCROLL.appearLift * (geometry.width / DESIGN_DASHBOARD_WIDTH)
   const restScale = rest.scale * lerp(SCROLL.appearScale, 1, appear)
 
   // The docked copy hides only after the destination underneath is fully visible.
   const vanish = clamp01((u - 0.97) / 0.03)
+  const handoff = clamp01((u - handoffStart) / (0.97 - handoffStart))
+  // The framed panel stays opaque in flight and tightens onto the row as it docks.
+  const collapse = easeInOutCubic(clamp01((u - moveStart) / (0.95 - moveStart)))
 
   return {
     x: lerp(rest.x, destination.x, move),
@@ -137,6 +149,9 @@ export function popupFrameAt(
     scale: lerp(restScale, destination.scale, move),
     opacity: appear * (1 - vanish),
     chrome: 1 - clamp01((u - moveStart) / (handoffStart - moveStart)),
+    elevation: lerp(1, 0.1, collapse) * (1 - handoff),
+    panel: 1 - handoff,
+    collapse,
   }
 }
 
