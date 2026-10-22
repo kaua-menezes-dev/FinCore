@@ -35,35 +35,41 @@ export interface PopupSpec {
   width: number
   height: number
   /**
-   * Desktop rest position and scale, in px of the 736 px wide showcase
-   * (Figma storyboard Stages 03 / 05a / 05c).
+   * Desktop rest position as fractions of the dashboard width, and scale as
+   * a multiple of the dashboard scale (Figma: S03 v2 Stages 03 / 05a / 05c).
+   * Every rest position keeps the pop-up inside the dashboard.
    */
   rest: { x: number; y: number; scale: number }
+  /** Largest absolute scale on tablet / mobile. */
+  compactScale: number
   /** Offset between the pop-up origin and its destination component (native px). */
   inset: { x: number; y: number }
 }
 
 /** Floating copies of dashboard components, one per step. */
 export const POPUPS: Record<DashboardTarget, PopupSpec> = {
-  // "Row / Supermercado" inside a floating panel (16 × 10 px padding at 68%).
+  // "Row / Supermercado" inside an opaque floating panel; right-aligned inside the dashboard.
   transaction: {
     width: 926,
     height: 90,
-    rest: { x: 128, y: 416, scale: 0.68 },
+    rest: { x: 0.0499, y: 0.5327, scale: 1.42 },
+    compactScale: 0.68,
     inset: { x: 24, y: 15 },
   },
-  // "Panel — Despesas por categoria" at 72%.
+  // "Panel — Despesas por categoria".
   categories: {
     width: 400,
     height: 492,
-    rest: { x: 186, y: 248, scale: 0.72 },
+    rest: { x: 0.2527, y: 0.337, scale: 1.506 },
+    compactScale: 0.72,
     inset: { x: 0, y: 0 },
   },
-  // "KPI — Resultado do período" at 100%.
+  // "KPI — Resultado do período", aligned to the dashboard's right edge.
   result: {
     width: 280,
     height: 172,
-    rest: { x: 436, y: 6, scale: 1 },
+    rest: { x: 0.59, y: 0.008, scale: 2.09 },
+    compactScale: 1,
     inset: { x: 0, y: 0 },
   },
 }

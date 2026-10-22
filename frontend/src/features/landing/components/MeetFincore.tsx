@@ -117,9 +117,10 @@ export function MeetFincore() {
 
         <div
           ref={contentRef}
-          className="mx-auto w-full max-w-320 px-6 md:px-10 lg:grid lg:grid-cols-[400px_minmax(0,736px)] lg:items-center lg:justify-between lg:gap-16"
+          className="mx-auto w-full max-w-320 px-6 md:px-10 lg:flex lg:max-w-none lg:items-center lg:justify-between lg:px-0"
         >
-          <div className="lg:pl-8">
+          {/* Text: left edge on the 1200 px page grid (Figma S03 v2 · Option B). */}
+          <div className="lg:ml-[max(2.5rem,calc((100%-75rem)/2))] lg:w-100 lg:shrink-0 lg:pl-8">
             <h2
               id="conheca-o-fincore-title"
               className="flex items-center gap-2.5 font-mono text-xs leading-4 font-medium tracking-[0.1em] text-fg-muted uppercase"
@@ -134,19 +135,24 @@ export function MeetFincore() {
             )}
           </div>
 
+          {/*
+            Dashboard: reference proportions — 41.9% → 96.7% of the section width
+            (54.8% wide, 3.3% from the right edge), capped by the viewport height.
+            No bezel: the dashboard itself carries the radius, hairline and shadow.
+          */}
           <motion.div
-            className="relative mt-6.5 w-full md:mt-7 lg:mt-0 lg:max-w-[min(736px,calc((100svh-6rem)*736/672))] lg:justify-self-end"
+            className="relative mt-6.5 w-full md:mt-7 lg:mt-0 lg:mr-[3.3%] lg:w-[min(54.8%,calc((100svh-8rem)*1440/1306))] lg:shrink-0"
             style={entrance}
           >
             <ShowcaseGlow />
             <div
               ref={showcaseRef}
-              className="hairline-gradient relative rounded-[14px] bg-bg-secondary bg-[linear-gradient(to_bottom,rgb(245_247_251/0.035),rgb(245_247_251/0)_60%)] p-2 shadow-[0_24px_80px_rgb(124_92_255/0.12)] md:rounded-[20px] md:p-4 lg:rounded-3xl lg:p-[3.2609%]"
+              className="relative aspect-[1440/1306] rounded-[10px] shadow-[0_24px_80px_rgb(124_92_255/0.12)] md:rounded-[14px] lg:rounded-2xl"
             >
               <figure
                 ref={frameRef}
                 aria-label="Prévia do dashboard do FinCore com dados fictícios de demonstração"
-                className="relative aspect-[1440/1306] overflow-hidden rounded-md md:rounded-lg lg:rounded-xl"
+                className="absolute inset-0 overflow-hidden rounded-[inherit]"
               >
                 <div
                   ref={canvasRef}
@@ -156,12 +162,16 @@ export function MeetFincore() {
                   <DashboardHome reveal={reveal} transactionId={REVEALED_TRANSACTION_ID} />
                 </div>
               </figure>
+              <span
+                aria-hidden="true"
+                className="hairline-gradient pointer-events-none absolute inset-0 rounded-[inherit]"
+              />
 
               {pinned && (
                 <div aria-hidden="true" className="pointer-events-none absolute inset-0">
                   {layout !== 'mobile' && (
                     <FloatingPopup target="transaction" index={0} progress={sequence} geometry={geometry} framed>
-                      <TransactionRow transaction={revealedTransaction} divider={false} />
+                      <TransactionRow transaction={revealedTransaction} />
                     </FloatingPopup>
                   )}
                   <FloatingPopup target="categories" index={1} progress={sequence} geometry={geometry}>
@@ -394,7 +404,7 @@ function StepContent({ step, active }: { step: MeetFincoreStep; active: boolean 
 /* ------------------------------------------------------------------- Glow */
 
 /**
- * Static violet light behind the showcase (Figma: "Dashboard ambient glow" +
+ * Static violet light behind the dashboard (Figma: "Dashboard ambient glow" +
  * "Dashboard glow core"). Radial gradients instead of blur filters, so it
  * costs nothing while the section scrolls or pins.
  */
